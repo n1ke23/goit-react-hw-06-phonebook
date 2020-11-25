@@ -22,9 +22,8 @@ function ContactForm({ addContat, items, isNotify, setIsNotify }) {
         if (items.some((el) => el.name === objForm.name)) {
             setIsNotify(true);
             setTimeout(function () {
-                if (isNotify) {
-                    setIsNotify(false)
-                };
+                console.log("hellow");
+                setIsNotify(false)
             }, 3000);
         } else {
             addContat(objForm);

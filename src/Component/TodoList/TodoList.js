@@ -1,12 +1,13 @@
 import React, { useEffect } from "react"
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { CSSTransition } from "react-transition-group"
 import ContactForm from "./ContactForm/ContactForm"
 import Filter from "./Filter/Filter"
 import ContactList from "./ContactList/ContactList"
 import "./TodoList.css"
 // import { addContact, removeContact, changeFilter } from './../../redux/actions/actionsContacts'
-import { addContat, setIsNotify } from './../../redux/actions/actionsContacts';
+import { addLocalStor } from './../../redux/actions/actionsContacts';
+import { items, notify } from "../../redux/selector/selector";
 
 // const state = {
 // 	contacts: [
@@ -18,18 +19,20 @@ import { addContat, setIsNotify } from './../../redux/actions/actionsContacts';
 // 	filter: "",
 // }
 
-function TodoList({ items, isNotify }) {
-	// const contacts = useSelector(state => state.contacts.items);
-	// const dispatch = useDispatch();
+function TodoList() {
+	const contacts = useSelector(state => items(state));
+	const isNotify = useSelector(state => notify(state));
+	const dispatch = useDispatch();
+
 	useEffect(() => {
 		const prevContact = localStorage.getItem("contacts")
 		const res = JSON.parse(prevContact)
-		addContat(res);
-	}, [])
+		dispatch(addLocalStor(res))
+	}, [dispatch])
 
 	useEffect(() => {
-		localStorage.setItem("contacts", JSON.stringify(items))
-	}, [items])
+		localStorage.setItem("contacts", JSON.stringify(contacts))
+	}, [contacts])
 
 	// const [obj, setObj] = useState({ ...state })
 	// const addContact = async (user) => {
@@ -75,7 +78,7 @@ function TodoList({ items, isNotify }) {
 			</CSSTransition>
 			<ContactForm />  {/*  addContact={addContact} setIsNotifi={setIsNotifi} isNotifi={isNotifi}    */}
 
-			<CSSTransition in={items.length > 1} timeout={250} classNames='filter' unmountOnExit>
+			<CSSTransition in={contacts.length > 1} timeout={250} classNames='filter' unmountOnExit>
 				<Filter />
 			</CSSTransition>
 
@@ -87,12 +90,8 @@ function TodoList({ items, isNotify }) {
 	)
 }
 
-const mapStateToProps = state => ({
-	items: state.contacts.items,
-	filter: state.contacts.filter,
-	isNotify: state.contacts.isNotify,
-});
 
-const mapDispatchToProps = { setIsNotify, addContat };
 
-export default connect(mapStateToProps, mapDispatchToProps)(TodoList);
+
+
+export default TodoList;

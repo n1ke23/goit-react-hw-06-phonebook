@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux';
+// import { combineReducers } from 'redux';
 import { createReducer } from "@reduxjs/toolkit";
 import { ADD_CONTACT, REMOVE_CONTACT, FILTER_VALUE, FILTER_ARR, REMOVE_FILTER_ARR, NOTIFY } from './../const/const'
 
@@ -47,7 +47,7 @@ export const reduceContacts = createReducer(initialState, {
             filterItems: "",
         },
     }),
-    [NOTIFY]: (state, { payload }) => ({
+    [NOTIFY]: (state, { payload = false }) => ({
         ...state,
         contacts: {
             ...state.contacts,

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import PropTypes from "prop-types";
+import React from 'react';
+// import PropTypes from "prop-types";
 import { filterValue, filterArr, removeFilterArr } from './../../../redux/actions/actionsContacts';
 import { connect } from 'react-redux'
 
@@ -7,7 +7,7 @@ const Filter = ({ filter, filterValue, filterArr, removeFilterArr }) => {
     const inputHandlerFilter = ({ target: { value } }) => {
         filterValue(value);
         filterArr(value);
-        if (value == '') {
+        if (value === '') {
             removeFilterArr();
         }
     };
@@ -28,7 +28,7 @@ const Filter = ({ filter, filterValue, filterArr, removeFilterArr }) => {
 };
 
 const mapStateToProps = (state) => ({
-    filter: state.contats.filter
+    filter: state.contacts.filter
 })
 
 const mapDispatchToProps = {

@@ -2,11 +2,11 @@ import React from "react";
 import { connect } from "react-redux";
 import { deleteContact, removeFilterArr } from './../../../redux/actions/actionsContacts';
 import Item from './Item/Item';
-import PropTypes from "prop-types";
+// import PropTypes from "prop-types";
 import { CSSTransition, TransitionGroup, } from "react-transition-group"
 import './ContactList.css'
 
-export function ContactList(arr, deleteContact, removeFilterArr) {
+export function ContactList({ arr, deleteContact, removeFilterArr }) {
 
     const removeContact = (id) => {
         deleteContact(id);

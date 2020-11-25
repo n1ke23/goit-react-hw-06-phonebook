@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react"
-import { useSelector, useDispatch, connect } from 'react-redux';
+import React, { useEffect } from "react"
+import { connect } from 'react-redux';
 import { CSSTransition } from "react-transition-group"
 import ContactForm from "./ContactForm/ContactForm"
 import Filter from "./Filter/Filter"
 import ContactList from "./ContactList/ContactList"
 import "./TodoList.css"
 // import { addContact, removeContact, changeFilter } from './../../redux/actions/actionsContacts'
-import { setIsNotify } from './../../redux/actions/actionsContacts';
+import { addContat, setIsNotify } from './../../redux/actions/actionsContacts';
 
 // const state = {
 // 	contacts: [
@@ -18,18 +18,18 @@ import { setIsNotify } from './../../redux/actions/actionsContacts';
 // 	filter: "",
 // }
 
-function TodoList({ items, isNotify, setIsNotify }) {
+function TodoList({ items, isNotify }) {
 	// const contacts = useSelector(state => state.contacts.items);
 	// const dispatch = useDispatch();
-	// useEffect(() => {
-	// 	const prevContact = localStorage.getItem("contacts")
-	// 	const res = JSON.parse(prevContact)
-	// 	dispatch(addContact(...res));
-	// }, [dispatch])
+	useEffect(() => {
+		const prevContact = localStorage.getItem("contacts")
+		const res = JSON.parse(prevContact)
+		addContat(res);
+	}, [])
 
-	// useEffect(() => {
-	// 	localStorage.setItem("contacts", JSON.stringify(contacts))
-	// }, [contacts])
+	useEffect(() => {
+		localStorage.setItem("contacts", JSON.stringify(items))
+	}, [items])
 
 	// const [obj, setObj] = useState({ ...state })
 	// const addContact = async (user) => {
@@ -90,9 +90,9 @@ function TodoList({ items, isNotify, setIsNotify }) {
 const mapStateToProps = state => ({
 	items: state.contacts.items,
 	filter: state.contacts.filter,
-	notify: state.contacts.isNotify,
+	isNotify: state.contacts.isNotify,
 });
 
-const mapDispatchToProps = { setIsNotify };
+const mapDispatchToProps = { setIsNotify, addContat };
 
 export default connect(mapStateToProps, mapDispatchToProps)(TodoList);

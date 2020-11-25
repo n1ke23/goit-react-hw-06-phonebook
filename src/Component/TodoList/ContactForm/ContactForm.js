@@ -1,26 +1,28 @@
 import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import PropTypes from "prop-types";
+// import { useSelector, useDispatch } from 'react-redux';
+// import PropTypes from "prop-types";
 import './ContactForm.css'
 import { v4 as uuidv4 } from 'uuid';
 import { addContat, setIsNotify } from './../../../redux/actions/actionsContacts';
 import { connect } from 'react-redux';
 
-function ContactForm({ addContat, items, isNotifi, setIsNotify }) {
-    const [objForm, setObjForm] = useState({ name: '', number: '' });
+function ContactForm({ addContat, items, isNotify, setIsNotify }) {
+    const [objForm, setObjForm] = useState({ name: '', number: '', id: '' });
+
     const inputHandler = ({ target }) => {
-        if (isNotifi) {
+        if (isNotify) {
             setIsNotify(false)
         };
         const { value, name } = target;
-        setObjForm(prev => ({ ...prev, [name]: value }));
+        setObjForm(prev => ({ ...prev, [name]: value, id: uuidv4() }));
     };
+
     const onHandelSubmit = (e) => {
         e.preventDefault();
         if (items.some((el) => el.name === objForm.name)) {
             setIsNotify(true);
             setTimeout(function () {
-                if (isNotifi) {
+                if (isNotify) {
                     setIsNotify(false)
                 };
             }, 3000);
@@ -28,7 +30,7 @@ function ContactForm({ addContat, items, isNotifi, setIsNotify }) {
             addContat(objForm);
         }
 
-        setObjForm({ name: '', number: '' });
+        setObjForm({ name: '', number: '', id: uuidv4() });
     };
 
     // const contacts = useSelector(state => state.contacts.items);
@@ -82,7 +84,7 @@ function ContactForm({ addContat, items, isNotifi, setIsNotify }) {
     );
 };
 
-const mapStateToProps = state => ({ items: state.contacts.items });
+const mapStateToProps = state => ({ items: state.contacts.items, isNotify: state.contacts.isNotify });
 const mapDispatchToProps = { addContat, setIsNotify };
 export default connect(mapStateToProps, mapDispatchToProps)(ContactForm);
 

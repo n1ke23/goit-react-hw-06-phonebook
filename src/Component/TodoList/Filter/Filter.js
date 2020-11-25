@@ -1,9 +1,16 @@
 import React, { useState } from 'react';
 import PropTypes from "prop-types";
+import { filterValue, filterArr, removeFilterArr } from './../../../redux/actions/actionsContacts';
 import { connect } from 'react-redux'
-import actions from "../../../redux/actions/actionsContacts";
-const Filter = ({ inputHandlerFilter, filter }) => {
 
+const Filter = ({ filter, filterValue, filterArr, removeFilterArr }) => {
+    const inputHandlerFilter = ({ target: { value } }) => {
+        filterValue(value);
+        filterArr(value);
+        if (value == '') {
+            removeFilterArr();
+        }
+    };
     return (
         <>
             <form>
@@ -20,17 +27,14 @@ const Filter = ({ inputHandlerFilter, filter }) => {
     );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     filter: state.contats.filter
 })
 
 const mapDispatchToProps = {
-    inputHandlerFilter: actions.filter
-}
+    filterValue,
+    filterArr,
+    removeFilterArr,
+};
 
-export default connect(mapStateToProps)(Filter);
-
-Filter.propTypes = {
-    inputHandlerFilter: PropTypes.func.isRequired,
-    filter: PropTypes.string.isRequired,
-}
+export default connect(mapStateToProps, mapDispatchToProps)(Filter);

@@ -1,20 +1,60 @@
 import { combineReducers } from 'redux';
 import { createReducer } from "@reduxjs/toolkit";
+import { ADD_CONTACT, REMOVE_CONTACT, FILTER_VALUE, FILTER_ARR, REMOVE_FILTER_ARR, NOTIFY } from './../const/const'
 
+const initialState = {
+    contacts: {
+        items: [],
+        filter: '',
+    },
+};
 
-const items = createReducer([], {
-    [tasksActions.addContat]: (start, action) => [...state, action.payload.contacts],
-    [tasksActions.remuveContact]: (start, action) => state.filter((contact) => contact.id !== action.payload),
-})
-
-const filter = createReducer('', {
-    [tasksActions.remuveContact]: (start, action) => action.payload,
-})
-
-export default combineReducers({ items, filter })
-
-
-
+export const reduceContacts = createReducer(initialState, {
+    [ADD_CONTACT]: (state, { payload }) => ({
+        ...state,
+        contacts: {
+            ...state.contacts,
+            items: [...state.contacts.items, payload],
+        },
+    }),
+    [REMOVE_CONTACT]: (state, { payload }) => ({
+        ...state,
+        contacts: {
+            ...state.contacts,
+            items: state.contacts.items.filter(contact => contact.id !== payload),
+        },
+    }),
+    [FILTER_VALUE]: (state, { payload }) => ({
+        ...state,
+        contacts: {
+            ...state.contacts,
+            filter: payload,
+        },
+    }),
+    [FILTER_ARR]: (state, { payload }) => ({
+        ...state,
+        contacts: {
+            ...state.contacts,
+            filterItems: state.contacts.items.filter(el =>
+                el.name.toLowerCase().includes(state.contacts.filter.toLowerCase()),
+            ),
+        },
+    }),
+    [REMOVE_FILTER_ARR]: (state, { payload }) => ({
+        ...state,
+        contacts: {
+            ...state.contacts,
+            filterItems: "",
+        },
+    }),
+    [NOTIFY]: (state, { payload }) => ({
+        ...state,
+        contacts: {
+            ...state.contacts,
+            isNotify: payload,
+        },
+    }),
+});
 
     // const state = {
     //     contacts: [

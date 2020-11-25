@@ -1,17 +1,11 @@
 import { createAction } from '@reduxjs/toolkit';
-import { v4 as uuidv4 } from "uuid"
+import { ADD_CONTACT, REMOVE_CONTACT, FILTER_VALUE, FILTER_ARR, REMOVE_FILTER_ARR, NOTIFY } from './../const/const'
 
-const addContat = createAction('contact/add', (contact) => ({
-    payload: {
-        contacts: {
-            id: uuidv4(),
-            ...contact
-        }
-    }
-}))
 
-const removeContact = createAction('contact/remove')
+export const addContat = createAction(ADD_CONTACT);// добавить
+export const deleteContact = createAction(REMOVE_CONTACT);// удалить
+export const setIsNotify = createAction(NOTIFY);// алерт на задвоение
+export const filterValue = createAction(FILTER_VALUE);// добавить фильтр
+export const filterArr = createAction(FILTER_ARR);// массив фильтров
 
-const changeFilter = createAction('contact/changeFilter')
-
-export default { addContat, removeContact, changeFilter }
+export const removeFilterArr = createAction(REMOVE_FILTER_ARR);

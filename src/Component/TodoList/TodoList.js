@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react"
-import { CSSTransition, TransitionGroup } from "react-transition-group"
-import { v4 as uuidv4 } from "uuid"
+import { useSelector, useDispatch, connect } from 'react-redux';
+import { CSSTransition } from "react-transition-group"
 import ContactForm from "./ContactForm/ContactForm"
 import Filter from "./Filter/Filter"
 import ContactList from "./ContactList/ContactList"
 import "./TodoList.css"
-
+// import { addContact, removeContact, changeFilter } from './../../redux/actions/actionsContacts'
+import { setIsNotify } from './../../redux/actions/actionsContacts';
 
 // const state = {
 // 	contacts: [
@@ -17,21 +18,20 @@ import "./TodoList.css"
 // 	filter: "",
 // }
 
-const TodoList = () => {
+function TodoList({ items, isNotify, setIsNotify }) {
+	// const contacts = useSelector(state => state.contacts.items);
+	// const dispatch = useDispatch();
+	// useEffect(() => {
+	// 	const prevContact = localStorage.getItem("contacts")
+	// 	const res = JSON.parse(prevContact)
+	// 	dispatch(addContact(...res));
+	// }, [dispatch])
+
+	// useEffect(() => {
+	// 	localStorage.setItem("contacts", JSON.stringify(contacts))
+	// }, [contacts])
+
 	// const [obj, setObj] = useState({ ...state })
-	const [isNotifi, setIsNotifi] = useState(false)
-
-	useEffect(() => {
-		const prevContact = localStorage.getItem("contacts")
-		const res = JSON.parse(prevContact)
-		setObj((prev) => ({ ...prev, contacts: res }))
-
-	}, [])
-
-	useEffect(() => {
-		localStorage.setItem("contacts", JSON.stringify(obj.contacts))
-	}, [obj.contacts])
-
 	// const addContact = async (user) => {
 	// 	if (obj.contacts.some((el) => el.name === user.name)) {
 	// 		reversNotifi()
@@ -54,15 +54,15 @@ const TodoList = () => {
 	// const vissbleTask = () => {
 	// 	return obj.contacts.filter((el) => el.name.toLowerCase().includes(obj.filter.toLowerCase()))
 	// }
-	const reversNotifi = () => {
-		setIsNotifi(true)
-		setTimeout(function () {
-			if (isNotifi) {
-				setIsNotifi(false)
-			};
-		}, 2000);
-	}
-	const filterTask = vissbleTask()
+	// const reversNotifi = () => {
+	// 	setIsNotifi(true)
+	// 	setTimeout(function () {
+	// 		if (isNotifi) {
+	// 			setIsNotifi(false)
+	// 		};
+	// 	}, 2000);
+	// }
+	// const filterTask = vissbleTask()
 
 	return (
 		<>
@@ -70,20 +70,29 @@ const TodoList = () => {
 			<CSSTransition in={true} appear={true} timeout={500} classNames="title" unmountOnExit>
 				<h1 className='titles'>Phonebook</h1>
 			</CSSTransition>
-			<CSSTransition in={isNotifi} timeout={500} classNames="alert" unmountOnExit>
+			<CSSTransition in={isNotify} timeout={500} classNames="alert" unmountOnExit>
 				<h2 className='alert'>Contact is already exists!</h2>
 			</CSSTransition>
-			<ContactForm setIsNotifi={setIsNotifi} isNotifi={isNotifi} />  {/*  addContact={addContact}  */}
+			<ContactForm />  {/*  addContact={addContact} setIsNotifi={setIsNotifi} isNotifi={isNotifi}    */}
 
-			<CSSTransition in={obj.contacts.length > 1} timeout={250} classNames='filter' unmountOnExit>
+			<CSSTransition in={items.length > 1} timeout={250} classNames='filter' unmountOnExit>
 				<Filter />
 			</CSSTransition>
 
-			<ContactList obj={obj} filter={filterTask} deleteContact={delContact} />
+			<ContactList /> {/* obj={obj} filter={filterTask} deleteContact={delContact}  */}
+
 
 
 		</>
 	)
 }
 
-export default TodoList
+const mapStateToProps = state => ({
+	items: state.contacts.items,
+	filter: state.contacts.filter,
+	notify: state.contacts.isNotify,
+});
+
+const mapDispatchToProps = { setIsNotify };
+
+export default connect(mapStateToProps, mapDispatchToProps)(TodoList);

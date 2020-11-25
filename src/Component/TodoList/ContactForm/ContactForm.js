@@ -1,26 +1,63 @@
 import React, { useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
+import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from "prop-types";
 import './ContactForm.css'
-import { connect } from "react-redux";
-import actions from "../../../redux/actions/actionsContacts";
+import { v4 as uuidv4 } from 'uuid';
+import { addContat, setIsNotify } from './../../../redux/actions/actionsContacts';
+import { connect } from 'react-redux';
 
-const ContactForm = ({ addContact, isNotifi, setIsNotifi }) => {
-
+function ContactForm({ addContat, items, isNotifi, setIsNotify }) {
     const [objForm, setObjForm] = useState({ name: '', number: '' });
     const inputHandler = ({ target }) => {
         if (isNotifi) {
-            setIsNotifi(false)
+            setIsNotify(false)
         };
         const { value, name } = target;
         setObjForm(prev => ({ ...prev, [name]: value }));
     };
-
     const onHandelSubmit = (e) => {
         e.preventDefault();
-        addContact({ ...objForm })
+        if (items.some((el) => el.name === objForm.name)) {
+            setIsNotify(true);
+            setTimeout(function () {
+                if (isNotifi) {
+                    setIsNotify(false)
+                };
+            }, 3000);
+        } else {
+            addContat(objForm);
+        }
+
         setObjForm({ name: '', number: '' });
     };
+
+    // const contacts = useSelector(state => state.contacts.items);
+    // const dispatch = useDispatch();
+
+
+    // const inputHandler = ({ target }) => {
+    //     if (isNotifi) {
+    //         setIsNotify(false)
+    //     };
+    //     const { value, name } = target;
+    //     setObjForm(prev => ({ ...prev, [name]: value }));
+    // };
+
+    // const onHandelSubmit = (e) => {
+    //     e.preventDefault();
+    //     if (contacts.every((contact) => !contact.name.includes(name))) {
+    //         dispatch(addContact(...objForm, uuidv4()));
+    //     } else {
+    //         setIsNotify(true);
+    //         setTimeout(function () {
+    //             if (isNotifi) {
+    //                 setIsNotify(false)
+    //             };
+    //         }, 3000);
+    //     }
+
+    //     setObjForm({ name: '', number: '' });
+    // };
 
     return (
         <>
@@ -45,13 +82,9 @@ const ContactForm = ({ addContact, isNotifi, setIsNotifi }) => {
     );
 };
 
-const mapDispatchToProps = {
-    addContact: actions.addContat
-}
-
-export default connect(null, mapDispatchToProps)(ContactForm);
+const mapStateToProps = state => ({ items: state.contacts.items });
+const mapDispatchToProps = { addContat, setIsNotify };
+export default connect(mapStateToProps, mapDispatchToProps)(ContactForm);
 
 
-ContactForm.propTypes = {
-    addContact: PropTypes.func.isRequired,
-}
+
